@@ -48,12 +48,34 @@ void insertMap(HashMap *map, char *key, void *value) {
   while (map->buckets[posicion] != NULL && map->buckets[posicion]->key != NULL)
     posicion = (posicion + 1) % map->capacity;
 
-  if (map->buckets[posicion] == NULL || map->buckets[posicion]->key == NULL
-  
+  if (map->buckets[posicion] == NULL || map->buckets[posicion]->key == NULL) {
+    map->buckets[posicion] = createPair(key, value);
+    map->size++;
+  } 
     
 }
 
-void enlarge(HashMap *map) {
+void enlarge(HashMap *map) { //buckets = arreglo de pares
+  long old_capacity = map->capacity;
+  Pair **old_buckets = map->buckets; //un puntero a un puntero
+
+  map->capacity *= 2;
+  map->size = 0;
+  
+  map->buckets = (Pair **)calloc(map->capacity, sizeof(Pair *));
+
+  for(long i = 0; i < old_capacity; i++)
+    {
+      Pair *currentpair = old_buckets[i];
+      while(currentpair != NULL)
+        {
+          insertMap(map, currentpair->key, currentpair->value);
+          Pair *temp = currentpair;
+          currentpair = currentpair->next;
+          free(temp);
+        }
+    }
+  free(old_buckets);
   enlarge_called = 1; // no borrar (testing purposes)
 }
 
@@ -63,12 +85,13 @@ HashMap *createMap(long capacity) {
   map->size = 0;
   map->capacity = capacity;
   map->current = -1;
-  // return map;
 
-  return NULL;
+  return map;
 }
 
-void eraseMap(HashMap *map, char *key) {
+void eraseMap(HashMap *map, char *key)
+
+{
   if (map == NULL || key == NULL)
     return;
   long posicion = hash(key, map->capacity);

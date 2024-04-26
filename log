@@ -23,3 +23,18 @@ hashmap.c:85:16: error: control reaches end of non-void function [-Werror=return
 cc1: all warnings being treated as errors
 Compilation failed
 7f889db
+Fri 26 Apr 2024 07:46:30 PM UTC: 
+ hashmap.c | 35 +++++++++++++++++++++++++++++------
+ 1 file changed, 29 insertions(+), 6 deletions(-)
+In file included from test.c:4:
+hashmap.c: In function ‘eraseMap’:
+hashmap.c:100:1: error: expected expression before ‘}’ token
+  100 | }
+      | ^
+hashmap.c: In function ‘searchMap’:
+hashmap.c:108:16: error: control reaches end of non-void function [-Werror=return-type]
+  108 |   return NULL; }
+      |                ^
+cc1: all warnings being treated as errors
+Compilation failed
+c45d94c
