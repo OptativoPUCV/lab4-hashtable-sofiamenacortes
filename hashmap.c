@@ -80,65 +80,60 @@ void enlarge(HashMap *map) { //buckets = arreglo de pares
 }
 
 HashMap *createMap(long capacity) {
-  HashMap *map = (HashMap *)malloc(sizeof(HashMap));
-  map->buckets = (Pair **)calloc(capacity, sizeof(Pair *));
-  map->size = 0;
-  map->capacity = capacity;
-  map->current = -1;
+    HashMap *map = (HashMap *)malloc(sizeof(HashMap));
+    map->buckets = (Pair **)calloc(capacity, sizeof(Pair *));
+    map->size = 0;
+    map->capacity = capacity;
+    map->current = -1; 
 
-  return map;
+    return map;
 }
 
 
 Pair *searchMap(HashMap *map, char *key) { 
-  if (map == NULL || key == NULL)
-    return NULL;
-  
-  long posicion = hash(key, map->capacity);
-  Pair *currentpair = map->buckets[posicion];
-  
-  while (currentpair != NULL && strcmp(currentpair->key, key) != 0)
-    {
-      currentpair = currentpair->next;
-    }
-  if(currentpair != NULL && strcmp(currentpair->key, key) == 0)
-  {
-    map->current = posicion;
-    return currentpair;
-  }
+    if (map == NULL || key == NULL)
+        return NULL;
 
-  return NULL;
+    long posicion = hash(key, map->capacity);
+    Pair *currentpair = map->buckets[posicion];
+
+    while (currentpair != NULL && strcmp(currentpair->key, key) != 0) {
+        currentpair = currentpair->next;
+    }
+
+    if (currentpair != NULL && strcmp(currentpair->key, key) == 0) {
+        map->current = posicion; 
+        return currentpair;
+    }
+
+    return NULL;
 }
 
 void eraseMap(HashMap *map, char *key) {
-  if (map == NULL || key == NULL)
-    return;
+    if (map == NULL || key == NULL)
+        return;
 
-  long posicion = hash(key, map->capacity);
-  Pair *currentpair = map->buckets[posicion];
-  Pair *previo = NULL;
+    long posicion = hash(key, map->capacity);
+    Pair *currentpair = map->buckets[posicion];
+    Pair *previo = NULL;
 
-  while (currentpair != NULL && strcmp(currentpair->key, key) != 0)
-  {
-    previo = currentpair;
-    currentpair = currentpair->next;
-  }
+    while (currentpair != NULL && strcmp(currentpair->key, key) != 0) {
+        previo = currentpair;
+        currentpair = currentpair->next;
+    }
 
-  if (currentpair != NULL && strcmp(currentpair->key, key) == 0){
-  if(previo == NULL)
-  {
-    map->buckets[posicion] = currentpair->next;
-  }
-  else{
-    previo->next = currentpair->next;
-  }
+    if (currentpair != NULL && strcmp(currentpair->key, key) == 0) {
+        if (previo == NULL) {
+            map->buckets[posicion] = currentpair->next;
+        } else {
+            previo->next = currentpair->next;
+        }
 
-    free(currentpair->next);
-    free(currentpair->value);
-    free(currentpair);
-    map->size--;
-  }
-
+        free(currentpair->key);
+        free(currentpair->value);
+        free(currentpair);
+        map->size--;
+    }
 }
 
 Pair *firstMap(HashMap *map) { 
