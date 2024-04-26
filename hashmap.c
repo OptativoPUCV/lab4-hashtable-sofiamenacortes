@@ -131,9 +131,15 @@ Pair *searchMap(HashMap *map, char *key) {
     {
       currentpair = currentpair->next;
     }
+  if(currentpair != NULL && strcmp(currentpair->key, key) == 0)
+  {
+    map->current = posicion;
+    return currentpair;
+  }
 
-  return currentpair;
+  return NULL;
 }
+
 Pair *firstMap(HashMap *map) { 
     if (map == NULL)
         return NULL;
