@@ -115,6 +115,7 @@ void eraseMap(HashMap *map, char *key) {
     free(currentpair->next);
     free(currentpair->value);
     free(currentpair);
+    map->size--;
   }
   
 }
