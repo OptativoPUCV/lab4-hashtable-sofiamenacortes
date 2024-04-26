@@ -143,3 +143,9 @@ hashmap.c:92:6: error: old-style parameter declarations in prototyped function d
 test.c:512: error: expected ‘{’ at end of input
 Compilation failed
 6029dbb
+Fri 26 Apr 2024 07:48:46 PM UTC: 
+ hashmap.c | 15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
+ tests:  6|3
+total_score: 40/70
+47ae74f
