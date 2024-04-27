@@ -40,42 +40,29 @@ int is_equal(void *key1, void *key2) {
 }
 
 void insertMap(HashMap *map, char *key, void *value) {
-  if (map == NULL || key == NULL)
-    return;
-  if (map->size == map->capacity)
-    enlarge(map);
-  long posicion = hash(key, map->capacity);
-  while (map->buckets[posicion] != NULL && map->buckets[posicion]->key != NULL)
-    posicion = (posicion + 1) % map->capacity;
+  int pos = hash(key, map->capacity);
+  while(map->buckets[pos] != NULL){
+    if(is_equal(map->buckets[pos]->key, key)){
+      map->buckets[pos]->value = value;
+      return;
+    }
+    pos++;
+    if(pos == map->capacity){
+      pos = 0;
+    }
+  }
 
-  if (map->buckets[posicion] == NULL || map->buckets[posicion]->key == NULL) {
-    map->buckets[posicion] = createPair(key, value);
-    map->size++;
-  } 
-    
+  if(map->size == map->capacity){
+    enlarge(map);
+  }
+  
+  map->buckets[pos] = createPair(key, value);
+  map->size++;
+  
 }
 
-void enlarge(HashMap *map) { //buckets = arreglo de pares
-  long old_capacity = map->capacity;
-  Pair **old_buckets = map->buckets; //un puntero a un puntero
-
-  map->capacity *= 2;
-  map->size = 0;
+void enlarge(HashMap *map) { 
   
-  map->buckets = (Pair **)calloc(map->capacity, sizeof(Pair *));
-
-  for(long i = 0; i < old_capacity; i++)
-    {
-      Pair *currentpair = old_buckets[i];
-      while(currentpair != NULL)
-        {
-          insertMap(map, currentpair->key, currentpair->value);
-          Pair *temp = currentpair;
-          currentpair = currentpair->next;
-          free(temp);
-        }
-    }
-  free(old_buckets);
   enlarge_called = 1; // no borrar (testing purposes)
 }
 
@@ -89,78 +76,52 @@ HashMap *createMap(long capacity) {
     return map;
 }
 
-
-Pair *searchMap(HashMap *map, char *key) { 
-    if (map == NULL || key == NULL)
-        return NULL;
-
-    long posicion = hash(key, map->capacity);
-    Pair *currentpair = map->buckets[posicion];
-
-    while (currentpair != NULL && strcmp(currentpair->key, key) != 0) {
-        currentpair = currentpair->next;
-    }
-
-    if (currentpair != NULL && strcmp(currentpair->key, key) == 0) {
-        map->current = posicion; 
-        return currentpair;
-    }
-
-    return NULL;
+void eraseMap(HashMap *map, char *key) {
+    
 }
 
-void eraseMap(HashMap *map, char *key) {
-    if (map == NULL || key == NULL)
-        return;
-
-    long posicion = hash(key, map->capacity);
-    Pair *currentpair = map->buckets[posicion];
-    Pair *previo = NULL;
-
-    while (currentpair != NULL && strcmp(currentpair->key, key) != 0) {
-        previo = currentpair;
-        currentpair = currentpair->next;
+Pair *searchMap(HashMap *map, char *key) { 
+    int pos = hash(key, map->capacity);
+  while(map->buckets[pos] != NULL){
+    if(is_equal(map->buckets[pos]->key, key)){
+      map->current = pos;
+      return map->buckets[pos];
     }
-
-    if (currentpair != NULL && strcmp(currentpair->key, key) == 0) {
-        if (previo == NULL) {
-            map->buckets[posicion] = currentpair->next;
-        } else {
-            previo->next = currentpair->next;
-        }
-
-        free(currentpair->key);
-        free(currentpair->value);
-        free(currentpair);
-        map->size--;
+    pos++;
+    if(pos == map->capacity){
+      pos = 0;
     }
+  }
+
+  return NULL;
 }
 
 Pair *firstMap(HashMap *map) { 
-    if (map == NULL)
-        return NULL;
-
-    for (long i = 0; i < map->capacity; i++) {
-        if (map->buckets[i] != NULL) {
-            map->current = i; 
-            return map->buckets[i];
-        }
-    }
-    return NULL; 
-}
-
-
-Pair *nextMap(HashMap *map) { 
-  if (map == NULL || map->current == -1)
-    return NULL;
-
-  for(long i = map->current + 1; i < map->capacity; i++){
+    int i;
+  for(i = 0; i < map->capacity; i++){
     if(map->buckets[i] != NULL){
       map->current = i;
       return map->buckets[i];
     }
   }
+  return NULL;
+}
 
-  map->current = -1;
-  return NULL; 
+
+Pair *nextMap(HashMap *map) { 
+ int i;
+  for(i = map->current + 1; i < map->capacity; i++)
+    if(map->buckets[i] != NULL){
+      map->current = i;
+      return map->buckets[i];
+    }
+
+    for(i = 0; i < map->current; i++){
+      if(map->buckets[i] != NULL){
+        map->current = i;
+        return map->buckets[i];
+      }
+    }
+
+  return NULL;
 }

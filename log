@@ -199,3 +199,17 @@ Fri 26 Apr 2024 08:54:40 PM UTC:
  tests:  8|3
 total_score: 40/70
 a782b4b
+Sat 27 Apr 2024 02:33:29 AM UTC: 
+ hashmap.c | 109 ++++++++++++++++++++------------------------------------------
+ 1 file changed, 35 insertions(+), 74 deletions(-)
+In file included from test.c:4:
+hashmap.c: In function ‘nextMap’:
+hashmap.c:113:3: error: this ‘for’ clause does not guard... [-Werror=misleading-indentation]
+  113 |   for(i = map->current + 1; i < map->capacity; i++)
+      |   ^~~
+hashmap.c:119:5: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the ‘for’
+  119 |     for(i = 0; i < map->current; i++){
+      |     ^~~
+cc1: all warnings being treated as errors
+Compilation failed
+d2f7b8d
