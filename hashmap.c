@@ -89,19 +89,19 @@ HashMap *createMap(long capacity) {
     return map;
 }
 
-void eraseMap(HashMap *map, char *key) {
+void eraseMap(HashMap * map,  char * key) {    
   if(map == NULL || key == NULL)
     exit(EXIT_FAILURE);
 
-  size_t pos = hash(key, map->capacity);
+  size_t posicion = hash(key, map->capacity);
 
-  while(map->buckets[pos] != NULL){
-    if(is_equal(map->buckets[pos]->key, key)){
-      map->buckets[pos] = NULL;
+  while(map->buckets[posicion] != NULL){
+    if(is_equal(map->buckets[posicion]->key, key)){
+      map->buckets[posicion]->key = NULL;
       map->size--;
       return;
     }
-    pos = (pos + 1) % map->capacity;
+    posicion = (posicion+1)%map->capacity;
   }
 }
 
